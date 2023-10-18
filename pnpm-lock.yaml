@@ -10,10 +10,10 @@ dependencies:
     version: 6.4.2
   '@googleapis/drive':
     specifier: ^8.3.1
-    version: 8.3.1
+    version: 8.4.0
   '@googleapis/sheets':
     specifier: ^5.0.4
-    version: 5.0.4
+    version: 5.0.5
   '@ladjs/bootstrap-social':
     specifier: ^7.0.2
     version: 7.0.2
@@ -100,7 +100,7 @@ dependencies:
     version: 1.4.5-lts.1
   nodemailer:
     specifier: ^6.9.5
-    version: 6.9.5
+    version: 6.9.6
   passport:
     specifier: ^0.6.0
     version: 0.6.0
@@ -989,8 +989,8 @@ packages:
     requiresBuild: true
     dev: false
 
-  /@googleapis/drive@8.3.1:
-    resolution: {integrity: sha512-6uh7cC6nzulB5Q76a4OmWF54pfFmDSy6IdF95DKF8yVJVaO6/CfyRtJJsAKmXOZkXIEs9sZZeSzBd4eXwJMlag==}
+  /@googleapis/drive@8.4.0:
+    resolution: {integrity: sha512-oB0HfGoJp/5KSZlrkCZ2EJOifSqwqSTPB3OQxjjePJ0EpARUJteVwTAhCrOI1l6/P/gVwF3S7PwmLXaC8txrxA==}
     engines: {node: '>=12.0.0'}
     dependencies:
       googleapis-common: 7.0.0
@@ -999,8 +999,8 @@ packages:
       - supports-color
     dev: false
 
-  /@googleapis/sheets@5.0.4:
-    resolution: {integrity: sha512-FE4erog7LvgJXjhs7FDP79xbUQfiZzJP+fpNrT7zjslESnR9A7qkLlRhEMLWvK5U+tYwqGczcYsERA3Fu8nz4w==}
+  /@googleapis/sheets@5.0.5:
+    resolution: {integrity: sha512-XMoONmgAJm2jYeTYHX4054VcEkElxlgqmnHvt0wAurzEHoGJLdUHhTAJXGPLgSs4WVMPtgU8HLrmk7/U+Qlw7A==}
     engines: {node: '>=12.0.0'}
     dependencies:
       googleapis-common: 7.0.0
@@ -4764,8 +4764,8 @@ packages:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
     dev: true
 
-  /nodemailer@6.9.5:
-    resolution: {integrity: sha512-/dmdWo62XjumuLc5+AYQZeiRj+PRR8y8qKtFCOyuOl1k/hckZd8durUUHs/ucKx6/8kN+wFxqKJlQ/LK/qR5FA==}
+  /nodemailer@6.9.6:
+    resolution: {integrity: sha512-s7pDtWwe5fLMkQUhw8TkWB/wnZ7SRdd9HRZslq/s24hlZvBP3j32N/ETLmnqTpmj4xoBZL9fOWyCIZ7r2HORHg==}
     engines: {node: '>=6.0.0'}
     dev: false
 
