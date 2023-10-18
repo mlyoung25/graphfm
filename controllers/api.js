@@ -200,7 +200,7 @@ exports.getLastfm = async (req, res, next) => {
   const getArtistInfo = () =>
     new Promise((resolve, reject) => {
       lastfm.request('artist.getInfo', {
-        artist: 'Roniit',
+        artist: 'Clairo',
         handlers: {
           success: resolve,
           error: reject
@@ -210,7 +210,7 @@ exports.getLastfm = async (req, res, next) => {
   const getArtistTopTracks = () =>
     new Promise((resolve, reject) => {
       lastfm.request('artist.getTopTracks', {
-        artist: 'Roniit',
+        artist: 'Clairo',
         handlers: {
           success: ({ toptracks }) => {
             resolve(toptracks.track.slice(0, 10));
@@ -222,7 +222,7 @@ exports.getLastfm = async (req, res, next) => {
   const getArtistTopAlbums = () =>
     new Promise((resolve, reject) => {
       lastfm.request('artist.getTopAlbums', {
-        artist: 'Roniit',
+        artist: 'Clairo',
         handlers: {
           success: ({ topalbums }) => {
             resolve(topalbums.album.slice(0, 3));
