@@ -1,19 +1,59 @@
 const axios = require('axios');
 const validator = require('validator');
 const nodemailer = require('nodemailer');
+const { LastFmNode } = require('lastfm');
 
 /**
  * GET /contact
  * Contact form page.
  */
-exports.getContact = (req, res) => {
-  const unknownUser = !(req.user);
-
-  res.render('contact', {
-    title: 'Contact',
-    sitekey: process.env.RECAPTCHA_SITE_KEY,
-    unknownUser,
+exports.getContact = async (req, res, next) => {
+  const lastfm = new LastFmNode({
+    api_key: process.env.LASTFM_KEY,
+    secret: process.env.LASTFM_SECRET
   });
+  const getUserTop = () =>
+    new Promise((resolve, reject) => {
+      lastfm.request('user.getTopArtists', {
+        user: 'globyglob',
+        handlers: {
+          success: resolve,
+          error: reject
+        }
+      });
+    });
+  const getArtistImage = (artistName) =>
+    new Promise((resolve, reject) => {
+      lastfm.request('artist.getInfo', {
+        artist: artistName,
+        user: 'globyglob',
+        handlers: {
+          success: (data) => {
+            resolve(data.artist.image[3]['#text']); // Retrieves large size image URL
+          },
+          error: reject
+        }
+      });
+    });
+  try {
+    const { topartists } = await getUserTop();
+    const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => ({
+      ...artist,
+      imageUrl: await getArtistImage(artist.name)
+    })));
+    const user = {
+      name: topartists['@attr'].user,
+      topArtists
+    };
+    res.render('contact', {
+      title: 'Last.fm chart',
+      user,
+    });
+  } catch (err) {
+    console.log('See error codes at: https://www.last.fm/api/errorcodes');
+    console.log(err);
+    next(err);
+  }
 };
 
 /**
