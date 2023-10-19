@@ -38,10 +38,13 @@ exports.getContact = async (req, res, next) => {
     });
   try {
     const { topartists } = await getUserTop(username);
-    const maxPlaycount = Math.max(...topartists.artist.map((artist) => artist.playcount));
+    const playcounts = topartists.artist.map((artist) => parseInt(artist.playcount, 10));
+    const minPlaycount = Math.min(...playcounts);
+    const maxPlaycount = Math.max(...playcounts);
+    const maxBubbleSize = (minPlaycount / maxPlaycount) > 0.125 ? 125 : 250;
     const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => {
-      const scaledRadius = (artist.playcount / maxPlaycount) * 150; // Scale the radius
-
+      const playcountRatio = parseInt(artist.playcount, 10) / maxPlaycount;
+      const scaledRadius = (playcountRatio ** (1 / 1.2)) * maxBubbleSize;
       return {
         x: 0,
         y: 0,
