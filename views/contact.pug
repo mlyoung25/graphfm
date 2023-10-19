@@ -139,8 +139,18 @@ block content
   script.
     document.getElementById("saveButton").addEventListener('click', function() {
       var svgElement = document.querySelector('svg');
+      var url = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      url.setAttribute('x', '75%'); // This positions the text near the right edge
+      url.setAttribute('y', '95%'); // This positions the text near the bottom
+      url.textContent = 'https://lastfmchart.onrender.com'; // your url
+      url.style.fontSize = '30px'; // you can change the size
+      url.style.fill = '#333' // You can choose color
+      svgElement.appendChild(url);
+
       // Convert SVG string to data URL
       var svgData = new XMLSerializer().serializeToString(svgElement);
+      svgElement.removeChild(url);  // Once we captured the image, remove the url text
+
       var canvas = document.createElement('canvas');
       var svgSize = svgElement.getBoundingClientRect();
       canvas.width = svgSize.width;
@@ -150,15 +160,15 @@ block content
       img.setAttribute("src", "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))));
       
       img.onload = function() {
-          ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0);
-          var imgsrc = canvas.toDataURL("image/png");
-          var a = document.createElement("a");
-          a.download = "LastFMChart.png";
-          a.href = imgsrc;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        var imgsrc = canvas.toDataURL("image/png");
+        var a = document.createElement("a");
+        a.download = "LastFMChart.png";
+        a.href = imgsrc;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       };
     });
