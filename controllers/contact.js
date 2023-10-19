@@ -30,7 +30,18 @@ exports.getContact = async (req, res, next) => {
         user: username,
         handlers: {
           success: (data) => {
-            resolve(data.artist.image[3]['#text']); // Retrieves large size image URL
+            axios({
+              method: 'get',
+              url: data.artist.image[3]['#text'],
+              responseType: 'arraybuffer',
+            })
+              .then((response) => {
+                const base64Image = Buffer.from(response.data, 'binary').toString('base64');
+                resolve(`data:${response.headers['content-type']};base64,${base64Image}`);
+              })
+              .catch((err) => {
+                reject(err);
+              });
           },
           error: reject
         }
@@ -41,7 +52,7 @@ exports.getContact = async (req, res, next) => {
     const playcounts = topartists.artist.map((artist) => parseInt(artist.playcount, 10));
     const minPlaycount = Math.min(...playcounts);
     const maxPlaycount = Math.max(...playcounts);
-    const maxBubbleSize = (minPlaycount / maxPlaycount) > 0.125 ? 125 : 250;
+    const maxBubbleSize = (minPlaycount / maxPlaycount) > 0.125 ? 150 : 300;
     const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => {
       const playcountRatio = parseInt(artist.playcount, 10) / maxPlaycount;
       const scaledRadius = (playcountRatio ** (1 / 1.2)) * maxBubbleSize;
