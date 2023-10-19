@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  a(href="javascript:history.back()") Back
+  a.btn.btn-primary(title='Back', onclick='history.back()') Back
   h3= artist.name
   h4 Top Albums
   for album in artist.topAlbums

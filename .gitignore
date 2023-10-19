@@ -12,6 +12,7 @@ pids
 logs
 results
 tmp
+Spacefile
 
 # Optional npm cache directory
 .npm
