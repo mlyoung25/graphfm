@@ -27,8 +27,8 @@ block content
     });
 
     function searchUserData(username) {
-      console.log('balls')
-      var apiUrl = `https://api.last.fm/2.0/?method=user.gettopartists&user=${username}&api_key=39abed3681eb6cb93c230d1232eeb4cd&format=json`;
+      api_key: process.env.LASTFM_KEY,
+      var apiUrl = `https://api.last.fm/2.0/?method=user.gettopartists&user=${username}&api_key=${api_key}&format=json`;
       $.ajax({
         url: apiUrl,
         type: "GET",
