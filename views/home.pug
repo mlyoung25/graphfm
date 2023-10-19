@@ -10,34 +10,11 @@ block content
       .col-12
         .card.shadow-lg
           .card-body.px-5.z-index-1.bg-cover
-            form
+            form(action='/contact', method='get')
               .row.mt-4
                 .col-md-6
                   .form-group
-                    input.form-control#usernameInput(type='username', placeholder='username')
+                    input.form-control#usernameInput(type='username', name='username', placeholder='username')
                 .col-md-6
                   .button-row.d-flex.mt-4(style='background-color: #d21309')
-                    a.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next(type='button', title='Search', href='http://www.last.fm/api/auth/?api_key=39abed3681eb6cb93c230d1232eeb4cd&cb=http://localhost:8080/contact') Connect
-
-
-  script.
-    document.querySelector('.js-btn-next').addEventListener('click', function() { 
-      var username = document.querySelector('#usernameInput').value; searchUserData(username); 
-      console.log(username);
-    });
-
-    function searchUserData(username) {
-      api_key: process.env.LASTFM_KEY,
-      var apiUrl = `https://api.last.fm/2.0/?method=user.gettopartists&user=${username}&api_key=${api_key}&format=json`;
-      $.ajax({
-        url: apiUrl,
-        type: "GET",
-        dataType: "json",
-        success: function(data) {
-          console.log(data); // replace with your own logic
-        },
-        error: function(error) {
-          console.log(error); // replace with your own logic
-        }
-      });
-    }
+                    button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next(type='submit', title='Search') Search

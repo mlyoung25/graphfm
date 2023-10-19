@@ -1,17 +1,35 @@
 extends ../layout
 
 block content
+  a(href="javascript:history.back()") Back
+  h3= artist.name
+  h4 Top Albums
+  for album in artist.topAlbums
+    img(src='' + album.image.slice(-1)[0]["#text"], width=240, height=240)
+    | &nbsp;
 
-  .container-fluid.py-4
-      h3 Top Artists
-      ul.list-group
-          each artist in user.topArtists
-              li.list-group-item.d-flex.justify-content-between
-                  div
-                      a(href=artist.url target="_blank")
-                          | #{artist.name}
-                  img(src=artist.imageUrl)
-                  div
-                      i.fas.fa-headphones.iconpadding
-                      | Play Count: #{artist.playcount}
-  
+  h4 Tags
+  for tag in artist.tags
+    span.label.label-primary
+      i.fas.fa-tag.fa-sm.iconpadding
+      | #{tag.name} |
+    |&nbsp;
+  p
+
+  h4 Biography
+  if artist.bio
+    p!= artist.bio
+  else
+    p No biography
+
+  h4 Top Tracks
+  ol
+    for track in artist.topTracks
+      li
+        a(href='' + track.url) #{track.name}
+
+  h4 Similar Artists
+  ul.list-unstyled.list-inline
+    for similarArtist in artist.similar
+      li
+        a(href='' + similarArtist.url) #{similarArtist.name}

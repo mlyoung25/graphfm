@@ -8,25 +8,26 @@ const { LastFmNode } = require('lastfm');
  * Contact form page.
  */
 exports.getContact = async (req, res, next) => {
+  const { username } = req.query;
   const lastfm = new LastFmNode({
     api_key: process.env.LASTFM_KEY,
     secret: process.env.LASTFM_SECRET
   });
-  const getUserTop = () =>
+  const getUserTop = (username) =>
     new Promise((resolve, reject) => {
       lastfm.request('user.getTopArtists', {
-        user: 'globyglob',
+        user: username,
         handlers: {
           success: resolve,
           error: reject
         }
       });
     });
-  const getArtistImage = (artistName) =>
+  const getArtistImage = (artistName, username) =>
     new Promise((resolve, reject) => {
       lastfm.request('artist.getInfo', {
         artist: artistName,
-        user: 'globyglob',
+        user: username,
         handlers: {
           success: (data) => {
             resolve(data.artist.image[3]['#text']); // Retrieves large size image URL
@@ -36,17 +37,26 @@ exports.getContact = async (req, res, next) => {
       });
     });
   try {
-    const { topartists } = await getUserTop();
-    const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => ({
-      ...artist,
-      imageUrl: await getArtistImage(artist.name)
-    })));
+    const { topartists } = await getUserTop(username);
+    const maxPlaycount = Math.max(...topartists.artist.map((artist) => artist.playcount));
+    const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => {
+      const scaledRadius = (artist.playcount / maxPlaycount) * 150; // Scale the radius
+
+      return {
+        x: 0,
+        y: 0,
+        radius: scaledRadius,
+        imageUrl: await getArtistImage(artist.name, username),
+        name: artist.name,
+        ...artist,
+      };
+    }));
     const user = {
       name: topartists['@attr'].user,
       topArtists
     };
     res.render('contact', {
-      title: 'Last.fm chart',
+      title: 'Last.fm API',
       user,
     });
   } catch (err) {

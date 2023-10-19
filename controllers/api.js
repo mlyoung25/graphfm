@@ -193,46 +193,61 @@ exports.getNewYorkTimes = (req, res, next) => {
  * Last.fm API example.
  */
 exports.getLastfm = async (req, res, next) => {
+  const artistName = req.query.artist;
   const lastfm = new LastFmNode({
     api_key: process.env.LASTFM_KEY,
     secret: process.env.LASTFM_SECRET
   });
-  const getUserTop = () =>
+  const getArtistInfo = () =>
     new Promise((resolve, reject) => {
-      lastfm.request('user.getTopArtists', {
-        user: 'globyglob',
+      lastfm.request('artist.getInfo', {
+        artist: artistName,
         handlers: {
           success: resolve,
           error: reject
         }
       });
     });
-  const getArtistImage = (artistName) =>
+  const getArtistTopTracks = () =>
     new Promise((resolve, reject) => {
-      lastfm.request('artist.getInfo', {
+      lastfm.request('artist.getTopTracks', {
         artist: artistName,
-        user: 'globyglob',
         handlers: {
-          success: (data) => {
-            resolve(data.artist.image[3]['#text']); // Retrieves large size image URL
+          success: ({ toptracks }) => {
+            resolve(toptracks.track.slice(0, 10));
+          },
+          error: reject
+        }
+      });
+    });
+  const getArtistTopAlbums = () =>
+    new Promise((resolve, reject) => {
+      lastfm.request('artist.getTopAlbums', {
+        artist: artistName,
+        handlers: {
+          success: ({ topalbums }) => {
+            resolve(topalbums.album.slice(0, 3));
           },
           error: reject
         }
       });
     });
   try {
-    const { topartists } = await getUserTop();
-    const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => ({
-      ...artist,
-      imageUrl: await getArtistImage(artist.name)
-    })));
-    const user = {
-      name: topartists['@attr'].user,
-      topArtists
+    const { artist: artistInfo } = await getArtistInfo();
+    const topTracks = await getArtistTopTracks();
+    const topAlbums = await getArtistTopAlbums();
+    const artist = {
+      name: artistInfo.name,
+      tags: artistInfo.tags ? artistInfo.tags.tag : [],
+      bio: artistInfo.bio ? artistInfo.bio.summary : '',
+      stats: artistInfo.stats,
+      similar: artistInfo.similar ? artistInfo.similar.artist : [],
+      topTracks,
+      topAlbums
     };
     res.render('api/lastfm', {
       title: 'Last.fm API',
-      user,
+      artist
     });
   } catch (err) {
     console.log('See error codes at: https://www.last.fm/api/errorcodes');
