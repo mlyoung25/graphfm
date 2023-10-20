@@ -139,6 +139,18 @@ block content
   script.
     document.getElementById("saveButton").addEventListener('click', function() {
       var svgElement = document.querySelector('svg');
+
+      var urlParams = new URLSearchParams(window.location.search);
+      var username = urlParams.get('username');
+
+      var userName = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      userName.setAttribute('x', '75%'); 
+      userName.setAttribute('y', '90%');  // position it above the url
+      userName.textContent = username;  // replace 'username' with the actual username
+      userName.style.fontSize = '30px'; 
+      userName.style.fill = '#333';
+      svgElement.appendChild(userName);
+
       var url = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       url.setAttribute('x', '75%'); // This positions the text near the right edge
       url.setAttribute('y', '95%'); // This positions the text near the bottom
@@ -150,6 +162,7 @@ block content
       // Convert SVG string to data URL
       var svgData = new XMLSerializer().serializeToString(svgElement);
       svgElement.removeChild(url);  // Once we captured the image, remove the url text
+      svgElement.removeChild(userName);
 
       var canvas = document.createElement('canvas');
       var svgSize = svgElement.getBoundingClientRect();

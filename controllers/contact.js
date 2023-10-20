@@ -52,7 +52,21 @@ exports.getContact = async (req, res, next) => {
     const playcounts = topartists.artist.map((artist) => parseInt(artist.playcount, 10));
     const minPlaycount = Math.min(...playcounts);
     const maxPlaycount = Math.max(...playcounts);
-    const maxBubbleSize = (minPlaycount / maxPlaycount) > 0.125 ? 150 : 300;
+    const playcountRatio = minPlaycount / maxPlaycount;
+    let maxBubbleSize;
+    if (playcountRatio > 1 / 10) {
+      maxBubbleSize = 150;
+    } else if (playcountRatio > 1 / 20) {
+      maxBubbleSize = 180;
+    } else if (playcountRatio > 1 / 40) {
+      maxBubbleSize = 210;
+    } else if (playcountRatio > 1 / 50) {
+      maxBubbleSize = 250;
+    } else if (playcountRatio > 1 / 70) {
+      maxBubbleSize = 300;
+    } else {
+      maxBubbleSize = 400;
+    }
     const topArtists = await Promise.all(topartists.artist.slice(0, 50).map(async (artist) => {
       const playcountRatio = parseInt(artist.playcount, 10) / maxPlaycount;
       const scaledRadius = (playcountRatio ** (1 / 1.2)) * maxBubbleSize;
